@@ -1,7 +1,5 @@
-import { useContext } from "react";
-import SearchBar from "../../components/searchBar/searchBar";
+import SearchBar from "../../components/searchBar/SearchBar";
 import "./homePage.scss";
-// import { AuthContext } from "../../context/AuthContext";
 
 function HomePage() {
 
@@ -18,7 +16,7 @@ function HomePage() {
             facilis id pariatur fugit quos laudantium temporibus dolor ea
             repellat provident impedit!
           </p>
-          <SearchBar />
+          <SearchBar/>
           <div className="boxes">
             <div className="box">
               <h1>16+</h1>
