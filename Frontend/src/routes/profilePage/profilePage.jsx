@@ -5,6 +5,12 @@ import {listData} from "../../lib/dummydata.js";
 import Chat from "../../components/chat/Chat.jsx";
 
 function ProfilePage() {
+
+  const handleLogout = () => {
+    
+  }
+
+
   return (
     <div className="profilePage">
       <div className="details">
@@ -20,6 +26,7 @@ function ProfilePage() {
             </span>
             <span>Username: <b>John doe</b></span>
             <span>E-mail: <b>John@gmail.com</b></span>
+            <button onClick={handleLogout}>Logout</button>
           </div>
           <div className="title">
             <h1>My List</h1>
