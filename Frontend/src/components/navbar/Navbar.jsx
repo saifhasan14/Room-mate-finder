@@ -5,20 +5,21 @@ import { AuthContext } from "../../context/AuthContext";
 
 function Navbar() {
   const [open, setOpen] = useState(false);
+
   const { currentUser } = useContext(AuthContext);
   const number = 4;
 
   return (
     <nav>
       <div className="left">
-        <Link to="/" className="logo">
+        <a href="/" className="logo">
           <img src="/logo.png" alt="" />
           <span>LamaEstate</span>
-        </Link>
-        <Link to="/">Home</Link>
-        <Link to="/">About</Link>
-        <Link to="/">Contact</Link>
-        <Link to="/">Agents</Link>
+        </a>
+        <a href="/">Home</a>
+        <a href="/">About</a>
+        <a href="/">Contact</a>
+        <a href="/">Agents</a>
       </div>
       <div className="right">
         {currentUser ? (
@@ -32,12 +33,16 @@ function Navbar() {
           </div>
         ) : (
           <>
-            <Link to="/login">
+            <a href="/login">Sign in</a>
+            <a href="/register" className="register">
+              Sign up
+            </a>
+            {/* <Link to="/login" >
               <span>Sign in</span>
             </Link>
             <Link to="/register" className="register">
               <span>Sign up</span>
-            </Link>
+            </Link> */}
           </>
         )}
         <div className="menuIcon">
@@ -48,12 +53,12 @@ function Navbar() {
           />
         </div>
         <div className={open ? "menu active" : "menu"}>
-          <Link to="/">Home</Link>
-          <Link to="/">About</Link>
-          <Link to="/">Contact</Link>
-          <Link to="/">Agents</Link>
-          <Link to="/login">Sign in</Link>
-          <Link to="/register">Sign up</Link>
+          <a href="/">Home</a>
+          <a href="/">About</a>
+          <a href="/">Contact</a>
+          <a href="/">Agents</a>
+          <a href="/login">Sign in</a>
+          <a href="/signup">Sign up</a>
         </div>
       </div>
     </nav>

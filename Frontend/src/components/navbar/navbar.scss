@@ -53,6 +53,7 @@ nav {
     justify-content: flex-end;
     background-color: #fcf5f3;
     height: 100%;
+    //included this for eroor 
     z-index: 9;
 
     @include md {
@@ -143,7 +144,6 @@ nav {
 
       &.active {
         right: 0;
-        z-index: 9999;
       }
 
       @include sm {

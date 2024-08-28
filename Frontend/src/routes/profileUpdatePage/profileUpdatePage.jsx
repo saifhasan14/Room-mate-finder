@@ -8,7 +8,8 @@ import UploadWidget from "../../components/uploadWidget/UploadWidget";
 function ProfileUpdatePage() {
   const { currentUser, updateUser } = useAuth();
   const [error, setError] = useState("");
-  const [avatar, setAvatar] = useState(currentUser?.avatar);
+  const [avatar, setAvatar] = useState([]);
+  // const [avatar, setAvatar] = useState(currentUser?.avatar);
 
   const navigate = useNavigate();
 
@@ -23,9 +24,9 @@ function ProfileUpdatePage() {
         username,
         email,
         password,
-        avatar,
+        avatar:avatar[0]
       });
-      // avatar:avatar[0]
+      // avatar,
       updateUser(res.data);
       navigate("/profile");
     } catch (err) {
@@ -66,8 +67,8 @@ function ProfileUpdatePage() {
         </form>
       </div>
       <div className="sideContainer">
-        {/* <img src={avatar[0] || currentUser.avatar || "/noavatar.jpg"} alt="" className="avatar" /> */}
-        <img src={avatar || currentUser.avatar || "/noavatar.jpg"} alt="" className="avatar" />
+        <img src={avatar[0] || currentUser.avatar || "/noavatar.jpg"} alt="" className="avatar" />
+        {/* <img src={avatar || currentUser.avatar || "/noavatar.jpg"} alt="" className="avatar" /> */}
         <UploadWidget
           uwConfig={{
             cloudName: "dowlb5a5u",
@@ -76,7 +77,7 @@ function ProfileUpdatePage() {
             maxImageFileSize: 2000000,
             folder: "avatars",
           }}
-          setAvatar={setAvatar}
+          setState={setAvatar}
         />
       </div>
     </div>
