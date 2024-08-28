@@ -35,15 +35,15 @@ model Post {
 }
 
 enum Type {
-  buy
+  share
   rent
 }
 
 enum Property {
-  apartment
+  flat
+  pg
   house
   condo
-  land
 }
 
 model PostDetail {
@@ -53,7 +53,7 @@ model PostDetail {
   pet        String?
   income     String?
   size       Int?
-  school     Int?
+  hospital     Int?
   bus        Int?
   restaurant Int?
   post       Post    @relation(fields: [postId], references: [id])

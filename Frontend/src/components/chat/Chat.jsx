@@ -1,14 +1,23 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import "./chat.scss";
 import { AuthContext } from "../../context/AuthContext";
 import {format} from "timeago.js";
 import apiRequest from "../../lib/apiRequest";
+import { SocketContext } from "../../context/SocketContext";
 
 function Chat({chats}) {
     // console.log(chats);
     
     const [chat, setChat] = useState(false)
+    const [seen, setSeen] = useState(false)
     const {currentUser} = useContext(AuthContext)
+    const { socket } = useContext(SocketContext) 
+
+    const messageEndRef = useRef()
+
+    useEffect(() => {
+        messageEndRef.current?.scrollIntoView({ behavior: "smooth"});
+    }, [chat])
 
     const handleOpenChat = async (id, receiver) => {
         try {
@@ -31,18 +40,44 @@ function Chat({chats}) {
         if (!text) return;
         try {
           const res = await apiRequest.post("/messages/" + chat.id, { text });
+        //   console.log(res);
+
           setChat((prev) => ({ ...prev, messages: [...prev.messages, res.data] }));
           e.target.reset();
-        //   socket.emit("sendMessage", {
-        //     receiverId: chat.receiver.id,
-        //     data: res.data,
-        //   });
+
+          socket.emit("sendMessage", {
+            receiverId: chat.receiver.id,
+            data: res.data,
+          });
+
         } catch (err) {
           console.log(err);
         }
-      };
+    };
 
-    
+    useEffect(() => {
+
+        const read = async () => {
+            try {
+                await apiRequest.put("chats/read/" + chat.id)
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        if(chat && socket){
+            socket.on("getMessage", (data) => {
+                if(chat.id === data.chatId){
+                    setChat((prev) => ({ ...prev, messages: [...prev.messages, data] }));
+                    read();
+                }
+            })
+        }
+        // for turning off re rendering
+        return () => {
+            socket.off("getMessage");
+        };
+    }, [socket, chat])
 
   return (
     <div className="chat">
@@ -53,7 +88,7 @@ function Chat({chats}) {
                     className="message" 
                     key={c.id}
                     style={{
-                        backgroundColor: c.seenBy.includes(currentUser?.id) ? "white" : "#fecd514e"
+                        backgroundColor: c.seenBy.includes(currentUser?.id) || chat?.id === c.id ? "white" : "#fecd514e"
                     }}
                     onClick={() => handleOpenChat(c.id, c.receiver)}
                 >
@@ -92,10 +127,7 @@ function Chat({chats}) {
                         <span>{format(message.createdAt) }</span>
                     </div>
                 )}
-                {/* <div className="chatMessage own">
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-                    <span>1 hour ago</span>
-                </div> */}
+                <div ref={messageEndRef}></div>
             </div>
             <form onSubmit={handleSubmit} className="bottom">
                 <textarea name="text" ></textarea>

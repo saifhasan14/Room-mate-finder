@@ -110,24 +110,24 @@ function SinglePage() {
             <div className="feature">
               <img src="/school.png" alt="" />
               <div className="featureText">
-                <span>School</span>
+                <span>Hospital</span>
                 <p>
-                  {post.postDetail.school > 999
-                    ? post.postDetail.school / 1000 + "km"
-                    : post.postDetail.school + "m"}{" "}
+                  {post.postDetail.hospital > 999
+                    ? post.postDetail.hospital / 1000 + "km"
+                    : post.postDetail.hospital + "m"}{" "}
                   away
                 </p>
               </div>
             </div>
             <div className="feature">
-              <img src="/pet.png" alt="" />
+              <img src="/bus.png" alt="" />
               <div className="featureText">
                 <span>Bus Stop</span>
                 <p>{post.postDetail.bus}m away</p>
               </div>
             </div>
             <div className="feature">
-              <img src="/fee.png" alt="" />
+              <img src="/restaurant.png" alt="" />
               <div className="featureText">
                 <span>Restaurant</span>
                 <p>{post.postDetail.restaurant}m away</p>

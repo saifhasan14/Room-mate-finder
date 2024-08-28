@@ -39,7 +39,7 @@ function NewPostPage() {
           pet: inputs.pet,
           income: inputs.income,
           size: parseInt(inputs.size),
-          school: parseInt(inputs.school),
+          hospital: parseInt(inputs.hospital),
           bus: parseInt(inputs.bus),
           restaurant: parseInt(inputs.restaurant),
         },
@@ -99,16 +99,16 @@ function NewPostPage() {
                 <option value="rent" defaultChecked>
                   Rent
                 </option>
-                <option value="buy">Buy</option>
+                <option value="share">Share</option>
               </select>
             </div>
             <div className="item">
               <label htmlFor="type">Property</label>
               <select name="property">
-                <option value="apartment">Apartment</option>
+                <option value="flat">Flat</option>
+                <option value="pg">PG</option>
                 <option value="house">House</option>
                 <option value="condo">Condo</option>
-                <option value="land">Land</option>
               </select>
             </div>
 
@@ -141,8 +141,8 @@ function NewPostPage() {
               <input min={0} id="size" name="size" type="number" />
             </div>
             <div className="item">
-              <label htmlFor="school">School</label>
-              <input min={0} id="school" name="school" type="number" />
+              <label htmlFor="hospital">Hospital</label>
+              <input min={0} id="hospital" name="hospital" type="number" />
             </div>
             <div className="item">
               <label htmlFor="bus">bus</label>
