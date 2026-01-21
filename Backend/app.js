@@ -30,7 +30,14 @@ app.use("/api/test", (req, res) => {
     res.send("<h1>haha</h1>")
 })
 
-app.listen(3000, () => {
+app.get('/test-cookie', (req, res) => {
+    console.log(req.cookies); // Check what cookies are being received
+    res.send('Cookie Test');
+  });
+// app.listen(3000, () => {
+//     console.log("server is running");
+// })
+app.listen(3001, "0.0.0.0", () => {
     console.log("server is running");
 })
 

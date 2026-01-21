@@ -12,6 +12,7 @@ export const SocketContextProvider = ({ children }) => {
 
     useEffect(() => {
         setSocket(io("http://localhost:4000"))
+        // setSocket(io("http://192.168.29.129:4000"))
     }, []);
 
     useEffect(() => {

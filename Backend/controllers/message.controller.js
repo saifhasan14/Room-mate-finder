@@ -6,16 +6,25 @@ export const addMessage = async (req, res) => {
   const text = req.body.text;
 
   try {
+    // const chat = await prisma.chat.findUnique({
+    //   where: {
+    //     id: chatId,
+    //     userIDs: {
+    //       hasSome: [tokenUserId],
+    //     },
+    //   },
+    // });
     const chat = await prisma.chat.findUnique({
       where: {
         id: chatId,
-        userIDs: {
-          hasSome: [tokenUserId],
-        },
       },
     });
 
     if (!chat) return res.status(404).json({ message: "Chat not found!" });
+    
+    if (!chat.userIDs.includes(tokenUserId)) {
+      return res.status(403).json({ message: "You do not have permission to view this chat" });
+    }
 
     const message = await prisma.message.create({
       data: {

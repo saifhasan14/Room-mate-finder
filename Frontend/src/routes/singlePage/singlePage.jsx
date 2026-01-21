@@ -6,10 +6,15 @@ import DOMPurify from "dompurify";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest";
+import Chat from "../../components/chat/Chat";
 
 function SinglePage() {
   const post = useLoaderData();
+  // console.log(post);
+  
   const [saved, setSaved] = useState(post.isSaved);
+  const [chatData, setChatData] = useState(null); 
+
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -26,6 +31,22 @@ function SinglePage() {
       setSaved((prev) => !prev);
     }
   };
+
+  const handleChat = async () => {
+    if (!currentUser) {
+      return navigate("/login");
+    }
+    try {
+      const res = await apiRequest.post("/chats", { receiverId: post.user?.id });
+      // console.log(res);
+      const resData =  await apiRequest.get("/chats");
+      // console.log(resData);
+      setChatData(resData.data)
+
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return (
     <div className="singlePage">
@@ -56,7 +77,13 @@ function SinglePage() {
           </div>
         </div>
       </div>
-      <div className="features">
+      {chatData ? ( 
+      <div className="chatContainer">
+        <div className="wrapper">
+          <Chat chats={chatData} />
+        </div>
+      </div>
+        ) : (<div className="features">
         <div className="wrapper">
           <p className="title">General</p>
           <div className="listVertical">
@@ -139,7 +166,8 @@ function SinglePage() {
             <Map items={[post]} />
           </div>
           <div className="buttons">
-            <button>
+            <button
+              onClick={handleChat}>
               <img src="/chat.png" alt="" />
               Send a Message
             </button>
@@ -154,7 +182,7 @@ function SinglePage() {
             </button>
           </div>
         </div>
-      </div>
+      </div>)}
     </div>
   );
 }

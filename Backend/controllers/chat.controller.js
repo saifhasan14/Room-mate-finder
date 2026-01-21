@@ -39,12 +39,24 @@ export const getChat = async (req, res) => {
   const tokenUserId = req.userId;
 
   try {
+    // const chat = await prisma.chat.findUnique({
+    //   where: {
+    //     id: req.params.id,
+    //     userIDs: {
+    //       hasSome: [tokenUserId],
+    //     },
+    //   },
+    //   include: {
+    //     messages: {
+    //       orderBy: {
+    //         createdAt: "asc",
+    //       },
+    //     },
+    //   },
+    // });
     const chat = await prisma.chat.findUnique({
       where: {
         id: req.params.id,
-        userIDs: {
-          hasSome: [tokenUserId],
-        },
       },
       include: {
         messages: {
@@ -53,7 +65,16 @@ export const getChat = async (req, res) => {
           },
         },
       },
-    });
+    })
+
+    // If chat is not found or the user is not part of the chat, return 404 or 403
+    if (!chat) {
+      return res.status(404).json({ message: "Chat not found" });
+    }
+
+    if (!chat.userIDs.includes(tokenUserId)) {
+      return res.status(403).json({ message: "You do not have permission to view this chat" });
+    }
 
     await prisma.chat.update({
       where: {
@@ -65,7 +86,9 @@ export const getChat = async (req, res) => {
         },
       },
     });
+
     res.status(200).json(chat);
+    
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Failed to get chat!" });
@@ -76,12 +99,27 @@ export const addChat = async (req, res) => {
   const tokenUserId = req.userId;
   const receiverId =  req.body.receiverId;
   try {
+
+    // Check if a chat between these two users already exists
+    const existingChat = await prisma.chat.findFirst({
+      where: {
+        userIDs: {
+          hasEvery: [tokenUserId, receiverId], // Ensure both users are in the chat
+        },
+      },
+    });
+
+    if (existingChat) {
+      // If a chat exists, return it
+      return res.status(200).json(existingChat);
+    }
+
     const newChat = await prisma.chat.create({
       data: {
         userIDs: [tokenUserId, receiverId ],
       },
     });
-    res.status(200).json(newChat);
+    return res.status(200).json(newChat);
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Failed to add chat!" });

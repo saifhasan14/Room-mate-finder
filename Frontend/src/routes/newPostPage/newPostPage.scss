@@ -22,41 +22,94 @@
           gap: 5px;
 
           label {
+            font-size: 14px;
+            font-weight: 500;
           }
 
-          input {
+          input, select {
             padding: 20px;
             border-radius: 5px;
             border: 1px solid gray;
           }
 
-          select {
-            padding: 19px;
+          /* --- STYLE FOR THE MAP BUTTON --- */
+          .mapButton {
+            padding: 20px;
+            background-color: teal; /* Teal Background */
+            color: white;           /* White Text */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s ease; /* Smooth animation */
+            text-align: center;
+            
+            /* Interactive Hover Effect */
+            &:hover {
+              background-color: #006b6b; /* Darker Teal */
+              transform: translateY(-2px); /* Slight Lift */
+              box-shadow: 0px 4px 10px rgba(0, 128, 128, 0.3);
+            }
+
+            /* Click Effect */
+            &:active {
+              transform: scale(0.98);
+            }
           }
 
           &.description {
             width: 100%;
             height: 320px;
-
-            .quill > .ql-container > .ql-editor{
+            .quill > .ql-container > .ql-editor {
               height: 200px;
               font-size: 16px;
             }
           }
         }
+
+        /* --- STYLE FOR THE MAIN ADD BUTTON --- */
         .sendButton {
-          width: 30%;
+          width: 50%; /* Default for Desktop */
+          padding: 20px;
           border-radius: 5px;
           border: none;
           background-color: teal;
           color: white;
           font-weight: bold;
+          font-size: 18px; 
           cursor: pointer;
+          margin: 30px auto 0; /* Centered */
+          text-transform: uppercase;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background-color: #006b6b;
+            transform: translateY(-2px);
+            box-shadow: 0px 4px 15px rgba(0, 128, 128, 0.4);
+          }
+
+          &:active {
+            transform: scale(0.98);
+          }
+        }
+
+        /* --- RESPONSIVE BREAKPOINT --- */
+        /* When screen is smaller than 768px (Tablets/Phones) */
+        @media (max-width: 768px) {
+          .item {
+            width: 100%; /* Inputs take full width on mobile */
+          }
+          
+          .sendButton {
+            width: 100%; /* Add Button takes full width on mobile */
+          }
         }
       }
     }
   }
 
+  /* ... Side Container Styles (No changes needed here) ... */
   .sideContainer {
     flex: 2;
     background-color: #fcf5f3;

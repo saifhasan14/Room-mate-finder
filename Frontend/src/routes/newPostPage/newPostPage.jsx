@@ -5,13 +5,21 @@ import "react-quill/dist/quill.snow.css";
 import apiRequest from "../../lib/apiRequest";
 import UploadWidget from "../../components/uploadWidget/UploadWidget";
 import { useNavigate } from "react-router-dom";
+import LocationPicker from "../../components/locationPicker/locationPicker";
 
 function NewPostPage() {
+  const [showMap, setShowMap] = useState(false);
+
+  const [lat, setLat] = useState("");
+  const [lng, setLng] = useState("");
+
+  const [position, setPosition] = useState([28.6139, 77.209]);
+
   const [value, setValue] = useState("");
   const [images, setImages] = useState([]);
   const [error, setError] = useState("");
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,7 +52,7 @@ function NewPostPage() {
           restaurant: parseInt(inputs.restaurant),
         },
       });
-      navigate("/"+res.data.id)
+      navigate("/" + res.data.id);
     } catch (err) {
       console.log(err);
       setError(error);
@@ -85,14 +93,39 @@ function NewPostPage() {
               <label htmlFor="bathroom">Bathroom Number</label>
               <input min={1} id="bathroom" name="bathroom" type="number" />
             </div>
+
             <div className="item">
               <label htmlFor="latitude">Latitude</label>
-              <input id="latitude" name="latitude" type="text" />
+              <input name="latitude" value={lat} readOnly />
             </div>
+
             <div className="item">
               <label htmlFor="longitude">Longitude</label>
-              <input id="longitude" name="longitude" type="text" />
+              <input name="longitude" value={lng} readOnly />
             </div>
+
+            <div className="item">
+               <label>Location</label>
+               <button 
+                 className="mapButton" 
+                 type="button" 
+                 onClick={() => setShowMap(true)}
+               >
+                 Pick Location
+               </button>
+            </div>
+
+            {/* <div className="item">
+              <label>Location</label>
+              <button
+                className="mapButton"
+                type="button"
+                onClick={() => setShowMap(true)}
+              >
+                Pick Location On Map
+              </button>
+            </div> */}
+
             <div className="item">
               <label htmlFor="type">Type</label>
               <select name="type">
@@ -171,6 +204,16 @@ function NewPostPage() {
           setState={setImages}
         />
       </div>
+      <LocationPicker
+        show={showMap}
+        setShow={setShowMap}
+        lat={lat}
+        lng={lng}
+        setLat={setLat}
+        setLng={setLng}
+        position={position}
+        setPosition={setPosition}
+      />
     </div>
   );
 }

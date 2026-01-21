@@ -6,7 +6,7 @@ const types = ["share", "rent"];
 
 function SearchBar() {
   const [query, setQuery] = useState({
-    type: "share",
+    type: "rent",
     city: "",
     minPrice: 0,
     maxPrice: 0,

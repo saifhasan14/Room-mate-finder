@@ -29,7 +29,7 @@ const getUser = (userId) => {
 }
 
 io.on("connection", (socket) => {
-    console.log(socket.id);
+    // console.log(socket.id);
     // socket.on("test", (data) => { console.log(data) })
 
     socket.on("newUser", (userId) => {
@@ -51,4 +51,10 @@ io.on("connection", (socket) => {
     })
 });
 
-io.listen("4000")
+// io.listen("4000")
+io.listen(4000, {
+    host: "0.0.0.0",
+    path: "/socket.io", // Optional, the default is "/socket.io"
+}, () => {
+    console.log("Socket.io server is running on http://0.0.0.0:4000");
+});
