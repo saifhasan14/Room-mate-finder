@@ -11,9 +11,10 @@ import Chat from "../../components/chat/Chat";
 function SinglePage() {
   const post = useLoaderData();
   // console.log(post);
-  
+  const [chatLoading, setChatLoading] = useState(false);
+
   const [saved, setSaved] = useState(post.isSaved);
-  const [chatData, setChatData] = useState(null); 
+  const [chatData, setChatData] = useState(null);
 
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -33,20 +34,18 @@ function SinglePage() {
   };
 
   const handleChat = async () => {
-    if (!currentUser) {
-      return navigate("/login");
-    }
-    try {
-      const res = await apiRequest.post("/chats", { receiverId: post.user?.id });
-      // console.log(res);
-      const resData =  await apiRequest.get("/chats");
-      // console.log(resData);
-      setChatData(resData.data)
+    if (chatLoading) return;
 
-    } catch (err) {
-      console.log(err);
-    }
-  }
+    setChatLoading(true);
+
+    const res = await apiRequest.post("/chats", { receiverId: post.user?.id });
+
+    const resData = await apiRequest.get("/chats");
+
+    setChatData(resData.data);
+
+    setChatLoading(false);
+  };
 
   return (
     <div className="singlePage">
@@ -77,112 +76,113 @@ function SinglePage() {
           </div>
         </div>
       </div>
-      {chatData ? ( 
-      <div className="chatContainer">
-        <div className="wrapper">
-          <Chat chats={chatData} />
-        </div>
-      </div>
-        ) : (<div className="features">
-        <div className="wrapper">
-          <p className="title">General</p>
-          <div className="listVertical">
-            <div className="feature">
-              <img src="/utility.png" alt="" />
-              <div className="featureText">
-                <span>Utilities</span>
-                {post.postDetail.utilities === "owner" ? (
-                  <p>Owner is responsible</p>
-                ) : (
-                  <p>Tenant is responsible</p>
-                )}
-              </div>
-            </div>
-            <div className="feature">
-              <img src="/pet.png" alt="" />
-              <div className="featureText">
-                <span>Pet Policy</span>
-                {post.postDetail.pet === "allowed" ? (
-                  <p>Pets Allowed</p>
-                ) : (
-                  <p>Pets not Allowed</p>
-                )}
-              </div>
-            </div>
-            <div className="feature">
-              <img src="/fee.png" alt="" />
-              <div className="featureText">
-                <span>Income Policy</span>
-                <p>{post.postDetail.income}</p>
-              </div>
-            </div>
-          </div>
-          <p className="title">Sizes</p>
-          <div className="sizes">
-            <div className="size">
-              <img src="/size.png" alt="" />
-              <span>{post.postDetail.size} sqft</span>
-            </div>
-            <div className="size">
-              <img src="/bed.png" alt="" />
-              <span>{post.bedroom} beds</span>
-            </div>
-            <div className="size">
-              <img src="/bath.png" alt="" />
-              <span>{post.bathroom} bathroom</span>
-            </div>
-          </div>
-          <p className="title">Nearby Places</p>
-          <div className="listHorizontal">
-            <div className="feature">
-              <img src="/school.png" alt="" />
-              <div className="featureText">
-                <span>Hospital</span>
-                <p>
-                  {post.postDetail.hospital > 999
-                    ? post.postDetail.hospital / 1000 + "km"
-                    : post.postDetail.hospital + "m"}{" "}
-                  away
-                </p>
-              </div>
-            </div>
-            <div className="feature">
-              <img src="/bus.png" alt="" />
-              <div className="featureText">
-                <span>Bus Stop</span>
-                <p>{post.postDetail.bus}m away</p>
-              </div>
-            </div>
-            <div className="feature">
-              <img src="/restaurant.png" alt="" />
-              <div className="featureText">
-                <span>Restaurant</span>
-                <p>{post.postDetail.restaurant}m away</p>
-              </div>
-            </div>
-          </div>
-          <p className="title">Location</p>
-          <div className="mapContainer">
-            <Map items={[post]} />
-          </div>
-          <div className="buttons">
-            <button
-              onClick={handleChat}>
-              <img src="/chat.png" alt="" />
-              Send a Message
-            </button>
-            <button
-              onClick={handleSave}
-              style={{
-                backgroundColor: saved ? "#fece51" : "white",
-              }}
-            >
-              <img src="/save.png" alt="" />
-              {saved ? "Place Saved" : "Save the Place"}
-            </button>
+      {chatData ? (
+        <div className="chatContainer">
+          <div className="wrapper">
+            <Chat chats={chatData} />
           </div>
         </div>
-      </div>)}
+      ) : (
+        <div className="features">
+          <div className="wrapper">
+            <p className="title">General</p>
+            <div className="listVertical">
+              <div className="feature">
+                <img src="/utility.png" alt="" />
+                <div className="featureText">
+                  <span>Utilities</span>
+                  {post.postDetail.utilities === "owner" ? (
+                    <p>Owner is responsible</p>
+                  ) : (
+                    <p>Tenant is responsible</p>
+                  )}
+                </div>
+              </div>
+              <div className="feature">
+                <img src="/pet.png" alt="" />
+                <div className="featureText">
+                  <span>Pet Policy</span>
+                  {post.postDetail.pet === "allowed" ? (
+                    <p>Pets Allowed</p>
+                  ) : (
+                    <p>Pets not Allowed</p>
+                  )}
+                </div>
+              </div>
+              <div className="feature">
+                <img src="/fee.png" alt="" />
+                <div className="featureText">
+                  <span>Income Policy</span>
+                  <p>{post.postDetail.income}</p>
+                </div>
+              </div>
+            </div>
+            <p className="title">Sizes</p>
+            <div className="sizes">
+              <div className="size">
+                <img src="/size.png" alt="" />
+                <span>{post.postDetail.size} sqft</span>
+              </div>
+              <div className="size">
+                <img src="/bed.png" alt="" />
+                <span>{post.bedroom} beds</span>
+              </div>
+              <div className="size">
+                <img src="/bath.png" alt="" />
+                <span>{post.bathroom} bathroom</span>
+              </div>
+            </div>
+            <p className="title">Nearby Places</p>
+            <div className="listHorizontal">
+              <div className="feature">
+                <img src="/school.png" alt="" />
+                <div className="featureText">
+                  <span>Hospital</span>
+                  <p>
+                    {post.postDetail.hospital > 999
+                      ? post.postDetail.hospital / 1000 + "km"
+                      : post.postDetail.hospital + "m"}{" "}
+                    away
+                  </p>
+                </div>
+              </div>
+              <div className="feature">
+                <img src="/bus.png" alt="" />
+                <div className="featureText">
+                  <span>Bus Stop</span>
+                  <p>{post.postDetail.bus}m away</p>
+                </div>
+              </div>
+              <div className="feature">
+                <img src="/restaurant.png" alt="" />
+                <div className="featureText">
+                  <span>Restaurant</span>
+                  <p>{post.postDetail.restaurant}m away</p>
+                </div>
+              </div>
+            </div>
+            <p className="title">Location</p>
+            <div className="mapContainer">
+              <Map items={[post]} />
+            </div>
+            <div className="buttons">
+              <button onClick={handleChat}>
+                <img src="/chat.png" alt="" />
+                Send a Message
+              </button>
+              <button
+                onClick={handleSave}
+                style={{
+                  backgroundColor: saved ? "#fece51" : "white",
+                }}
+              >
+                <img src="/save.png" alt="" />
+                {saved ? "Place Saved" : "Save the Place"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

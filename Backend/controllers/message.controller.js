@@ -21,10 +21,15 @@ export const addMessage = async (req, res) => {
     });
 
     if (!chat) return res.status(404).json({ message: "Chat not found!" });
-    
-    if (!chat.userIDs.includes(tokenUserId)) {
+
+    const user1 = String(chat.user1Id);
+    const user2 = String(chat.user2Id);
+    const current = String(tokenUserId);
+
+    if (user1 !== current && user2 !== current) {
       return res.status(403).json({ message: "You do not have permission to view this chat" });
     }
+
 
     const message = await prisma.message.create({
       data: {
